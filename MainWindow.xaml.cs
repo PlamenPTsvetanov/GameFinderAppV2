@@ -18,7 +18,6 @@ namespace GameFinderAppV2
     public partial class MainWindow : Window, INotifyPropertyChanged
     { 
         private string selectedObject { get; set; }
-        private int generatedRowIndex = 0;
         private bool flag = true;
         private List<TextBox> generatedTextBoxes = new List<TextBox>();
         private UIGeneratorViewModel uiGenerator { get; set; }
@@ -42,7 +41,7 @@ namespace GameFinderAppV2
                 flag = false;
                 string selectedItem = cbFields.SelectedItem as string;
 
-                uiGenerator.addNewSearchGridRow(selectedItem, ref generatedRowIndex, ref generatedTextBoxes);
+                uiGenerator.addNewSearchGridRow(selectedItem, ref generatedTextBoxes);
             }
             flag = true;
         }
@@ -82,7 +81,7 @@ namespace GameFinderAppV2
             uiGenerator.clearGrid(gridOutput);
 
             generatedTextBoxes.Clear();
-            generatedRowIndex = 0;
+           
 
             gridGeneratedFields.Children.Clear();
             gridGeneratedFields.RowDefinitions.Clear();

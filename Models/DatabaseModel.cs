@@ -18,6 +18,7 @@ namespace GameFinderAppV2.Models
         public DatabaseModel() : base("Server=localhost\\SQLEXPRESS;Database=Game_Database_V2;Trusted_Connection=True;") { }
         public DbSet<GameModel> Games { get; set; }
         public DbSet<PublisherModel> Publishers { get; set; }
+
         public List<DBDataModel> getDatabaseData(Dictionary<string, string> inParams, string table)
         {
             List<DBDataModel> values = new List<DBDataModel>();

@@ -13,11 +13,13 @@ namespace GameFinderAppV2.ViewModels
     public class WorkerViewModel
     {
         private WorkerModel _worker;
+        private DatabaseModel _db;
 
 
         public WorkerViewModel()
         {
             _worker = new WorkerModel();
+            _db = new DatabaseModel();
         }
 
         public List<DBDataModel> filter(List<TextBox> generatedTextBoxes, string table)
@@ -31,7 +33,7 @@ namespace GameFinderAppV2.ViewModels
 
                 dict.Add(field, value);
             }
-            return _worker.filter(dict, table);
+            return _db.getDatabaseData(dict, table);
         }
 
         public ObservableCollection<String> getFields(Type type)
