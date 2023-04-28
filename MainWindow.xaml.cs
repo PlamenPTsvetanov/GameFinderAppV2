@@ -19,15 +19,12 @@ namespace GameFinderAppV2
     { 
         private string selectedObject { get; set; }
         private bool flag = true;
-       /* private List<TextBox> generatedTextBoxes = new List<TextBox>();*/
         private UIGeneratorViewModel uiGenerator { get; set; }
-        public ObservableCollection<String> FieldList { get; set; }
         public ObservableCollection<String> SearchModels { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            FieldList = new ObservableCollection<String>();
             SearchModels = new ObservableCollection<string> { "Games", "Publishers" };
             uiGenerator = new UIGeneratorViewModel(ref gridGeneratedFields, ref gridOutput);
         }
@@ -68,7 +65,6 @@ namespace GameFinderAppV2
             binding.Source = uiGenerator;
             cbFields.SetBinding(ListBox.ItemsSourceProperty, binding);
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FieldList)));
             lblSearch.Visibility = Visibility.Hidden;
             cbSearchOptions.Visibility = Visibility.Hidden;
 
@@ -78,10 +74,8 @@ namespace GameFinderAppV2
 
         private void btnReturn_Click(object sender, RoutedEventArgs e)
         {
-            uiGenerator.clearGrid(gridOutput);
+            uiGenerator.clearGrid(gridOutput, gridGeneratedFields);
 
-            gridGeneratedFields.Children.Clear();
-            gridGeneratedFields.RowDefinitions.Clear();
             lblSearch.Visibility = Visibility.Visible;
             cbSearchOptions.Visibility = Visibility.Visible;
 

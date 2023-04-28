@@ -178,11 +178,20 @@ namespace GameFinderAppV2.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(gridOutput)));
         }
 
-        public void clearGrid(Grid grid)
+        public void clearGrid(Grid gridOutput)
         {
-            grid.Children.Clear();
-            grid.RowDefinitions.Clear();
-            grid.ColumnDefinitions.Clear();
+            _genTextBoxes.Clear();
+            gridOutput.Children.Clear();
+            gridOutput.RowDefinitions.Clear();
+            gridOutput.ColumnDefinitions.Clear();
+        }
+
+        public void clearGrid(Grid gridOutput, Grid gridGeneratedFields)
+        {
+            clearGrid(gridOutput);
+
+            gridGeneratedFields.Children.Clear();
+            gridGeneratedFields.RowDefinitions.Clear();
         }
 
         private string setToolTip(string name)
