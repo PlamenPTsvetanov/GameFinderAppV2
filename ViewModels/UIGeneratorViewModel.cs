@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
 using GameFinderAppV2.Models;
-using System.Reflection.Emit;
 using Label = System.Windows.Controls.Label;
-using System.Xml.Linq;
 
 namespace GameFinderAppV2.ViewModels
 {
@@ -24,7 +20,7 @@ namespace GameFinderAppV2.ViewModels
         private Grid gridGeneratedFields { get; set; }
         private Grid gridOutput { get; set; }
         private int generatedRowIndex = 0;
-
+        private List<TextBox> _genTextBoxes = new List<TextBox>();
         private WorkerViewModel workerViewModel { get; set; }
         
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -39,15 +35,18 @@ namespace GameFinderAppV2.ViewModels
         }
         
         public void addNewSearchGridRow(
-            string selectedItem, 
-            ref List<TextBox> generatedTextBoxes)
+            string selectedItem)
         {
             removeFieldFromList(selectedItem);
+            string tboxName = "tbox" + selectedItem;
+            
+            removeFromGeneratedTextBoxes(tboxName);
+
             RowDefinition rowDefinition = new RowDefinition();
             rowDefinition.Height = new GridLength(50);
 
             TextBox newTextBox = new TextBox();
-            newTextBox.Name = "tbox" + selectedItem;
+            newTextBox.Name = tboxName;
             newTextBox.Text = "";
             newTextBox.Height = 25;
             newTextBox.Width = 200;
@@ -92,7 +91,7 @@ namespace GameFinderAppV2.ViewModels
             gridGeneratedFields.Children.Add(newTextBox);
             gridGeneratedFields.Children.Add(button);
 
-            generatedTextBoxes.Add(newTextBox);
+            _genTextBoxes.Add(newTextBox);
         }
 
         public void getFieldsForComboBox(string table)
@@ -119,7 +118,7 @@ namespace GameFinderAppV2.ViewModels
             gridOutput.Children.Add(newLabel);
         }
 
-        public void search(string selectedObject, ref List<TextBox> generatedTextBoxes)
+        public void search(string selectedObject)
         {
             if (gridOutput.RowDefinitions.Count == 0)
             {
@@ -153,7 +152,7 @@ namespace GameFinderAppV2.ViewModels
                 }
             }
             string search = selectedObject.Substring(0, selectedObject.Length - 1) + "Models";
-            List<DBDataModel> filtered = workerViewModel.filter(generatedTextBoxes, search);
+            List<DBDataModel> filtered = workerViewModel.filter(_genTextBoxes, search);
 
             int i = 0;
             foreach (DBDataModel model in filtered)
@@ -217,12 +216,17 @@ namespace GameFinderAppV2.ViewModels
             TagForButton tag = (sender as Button)?.Tag as TagForButton;
 
             _fieldList.Add(tag.fieldName);
-
+            
             for (int i = gridGeneratedFields.Children.Count - 1; i >= 0; i--)
             {
                 if (Grid.GetRow(gridGeneratedFields.Children[i]) == tag.rowIndex)
                 {
-                    gridGeneratedFields.Children.Remove(gridGeneratedFields.Children[i]);
+                    if (gridGeneratedFields.Children[i] as TextBox != null)
+                    {
+                        TextBox textBox = gridGeneratedFields.Children[i] as TextBox;
+                        removeFromGeneratedTextBoxes(textBox.Name);
+                    }
+                    gridGeneratedFields.Children.Remove(gridGeneratedFields.Children[i]);   
                 }
             }
             gridGeneratedFields.RowDefinitions.RemoveAt(tag.rowIndex);
@@ -246,67 +250,39 @@ namespace GameFinderAppV2.ViewModels
 
                         button.Tag = newTag;
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(gridGeneratedFields)));
-                    }
+                    }  
                 }
             }
             generatedRowIndex = gridGeneratedFields.RowDefinitions.Count;
             gridGeneratedFields.UpdateLayout();
 
-            /*gridGeneratedFields.RowDefinitions.RemoveAt(tag.rowIndex);
-
-            bool isRemoved = false;
-            for (int i = gridGeneratedFields.Children.Count - 1; i >= 0; i--)
-            {
-                UIElement element = gridGeneratedFields.Children[i];
-                int row = Grid.GetRow(element);
-                if (row == tag.rowIndex)
-                {
-                    TextBox tb = element as TextBox;
-                    if (tb != null)
-                    {
-                        tb.Text = null;
-                    }
-                    gridGeneratedFields.Children.Remove(element);
-                    isRemoved = true;
-                }
-            }
-
-            if (isRemoved)
-            {
-                generatedRowIndex--;
-            }
-
-            UIElementCollection children = gridGeneratedFields.Children;
-            for (int i = 0; i < children.Count; i++)
-            {
-                UIElement el = children[i];
-                if (Grid.GetRow(el) >= tag.rowIndex)
-                {
-                    int v = Grid.GetRow(el) - 1;
-                    gridGeneratedFields.Children.Remove(el);
-                    Grid.SetRow(el, v);
-                    gridGeneratedFields.Children.Add(el);
-                }
-            }*/
-
-
-            /*PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(gridGeneratedFields)));
-            reorderFields();*/
+            reorderFields();
         }
 
         private void reorderFields()
         {
             ObservableCollection<string> orderedList = new ObservableCollection<string>();
-            foreach (string field in _fieldList)
+            foreach (string field in _orderedList)
             {
-                if (_orderedList.Contains(field))
+                if (_fieldList.Contains(field))
                 {
                     orderedList.Add(field);
                 }
             }
 
             _fieldList = orderedList;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_fieldList)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FieldList)));
+        }
+
+        private void removeFromGeneratedTextBoxes(string name)
+        {
+            for (int i = _genTextBoxes.Count - 1; i >= 0; i--)
+            {
+                if (_genTextBoxes.ElementAt(i).Name.Equals(name))
+                {
+                    _genTextBoxes.RemoveAt(i);
+                }
+            }
         }
 
         private void removeFieldFromList(string field)

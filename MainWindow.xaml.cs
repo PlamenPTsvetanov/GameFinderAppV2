@@ -19,7 +19,7 @@ namespace GameFinderAppV2
     { 
         private string selectedObject { get; set; }
         private bool flag = true;
-        private List<TextBox> generatedTextBoxes = new List<TextBox>();
+       /* private List<TextBox> generatedTextBoxes = new List<TextBox>();*/
         private UIGeneratorViewModel uiGenerator { get; set; }
         public ObservableCollection<String> FieldList { get; set; }
         public ObservableCollection<String> SearchModels { get; set; }
@@ -41,7 +41,7 @@ namespace GameFinderAppV2
                 flag = false;
                 string selectedItem = cbFields.SelectedItem as string;
 
-                uiGenerator.addNewSearchGridRow(selectedItem, ref generatedTextBoxes);
+                uiGenerator.addNewSearchGridRow(selectedItem);
             }
             flag = true;
         }
@@ -50,7 +50,7 @@ namespace GameFinderAppV2
         {
             uiGenerator.clearGrid(gridOutput);
             gridOutput.DataContext = uiGenerator;
-            uiGenerator.search(selectedObject, ref generatedTextBoxes);
+            uiGenerator.search(selectedObject);
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -79,9 +79,6 @@ namespace GameFinderAppV2
         private void btnReturn_Click(object sender, RoutedEventArgs e)
         {
             uiGenerator.clearGrid(gridOutput);
-
-            generatedTextBoxes.Clear();
-           
 
             gridGeneratedFields.Children.Clear();
             gridGeneratedFields.RowDefinitions.Clear();
