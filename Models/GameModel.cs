@@ -13,6 +13,5 @@ namespace GameFinderAppV2.Models
         public double? Rating { get; set; }
         public String? AgeCategory { get; set; }
         public String? Edition { get; set; }
-        public PublisherModel? Publisher { get; set; }
     }
 }

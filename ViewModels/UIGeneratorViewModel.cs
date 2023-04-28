@@ -34,8 +34,7 @@ namespace GameFinderAppV2.ViewModels
             workerViewModel = new WorkerViewModel();
         }
         
-        public void addNewSearchGridRow(
-            string selectedItem)
+        public void addNewSearchGridRow(string selectedItem)
         {
             removeFieldFromList(selectedItem);
             string tboxName = "tbox" + selectedItem;
@@ -151,12 +150,14 @@ namespace GameFinderAppV2.ViewModels
                     gridOutput.Children.Add(newLabel);
                 }
             }
-            string search = selectedObject.Substring(0, selectedObject.Length - 1) + "Models";
+            string search =
+                selectedObject.Substring(0, selectedObject.Length - 1) + "Model";
+
             List<DBDataModel> filtered = workerViewModel.filter(_genTextBoxes, search);
 
-            int i = 0;
             foreach (DBDataModel model in filtered)
             {
+                int i = 0;
                 RowDefinition rowDef = new RowDefinition();
                 rowDef.Height = new GridLength(30);
 
@@ -180,7 +181,6 @@ namespace GameFinderAppV2.ViewModels
 
         public void clearGrid(Grid gridOutput)
         {
-            _genTextBoxes.Clear();
             gridOutput.Children.Clear();
             gridOutput.RowDefinitions.Clear();
             gridOutput.ColumnDefinitions.Clear();
@@ -189,7 +189,7 @@ namespace GameFinderAppV2.ViewModels
         public void clearGrid(Grid gridOutput, Grid gridGeneratedFields)
         {
             clearGrid(gridOutput);
-
+            _genTextBoxes.Clear();
             gridGeneratedFields.Children.Clear();
             gridGeneratedFields.RowDefinitions.Clear();
         }
@@ -199,6 +199,7 @@ namespace GameFinderAppV2.ViewModels
             if (name.Contains("Title") ||
             name.Contains("Publisher") ||
             name.Contains("Name") ||
+            name.Contains("AgeCategory") ||
             name.Contains("Edition"))
             {
                 return "Field requires a string value for " + name.ToLower() + " attribute.";
