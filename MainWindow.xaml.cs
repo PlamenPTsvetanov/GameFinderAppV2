@@ -25,8 +25,8 @@ namespace GameFinderAppV2
         {
             InitializeComponent();
             DataContext = this;
-            SearchModels = new ObservableCollection<string> { "Games", "Publishers" };
-            uiGenerator = new UIGeneratorViewModel(ref gridGeneratedFields, ref gridOutput);
+            SearchModels = new ObservableCollection<string> { "Games", "Publishers", "Regions"};
+            uiGenerator = new UIGeneratorViewModel(ref gridGeneratedFields);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -38,7 +38,7 @@ namespace GameFinderAppV2
                 flag = false;
                 string selectedItem = cbFields.SelectedItem as string;
 
-                uiGenerator.addNewSearchGridRow(selectedItem);
+                uiGenerator.addNewSearchGridRow(selectedItem, ref gridGeneratedFields);
             }
             flag = true;
         }
@@ -47,7 +47,7 @@ namespace GameFinderAppV2
         {
             uiGenerator.clearGrid(gridOutput);
             gridOutput.DataContext = uiGenerator;
-            uiGenerator.search(selectedObject);
+            uiGenerator.search(selectedObject, ref gridOutput);
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -92,5 +92,7 @@ namespace GameFinderAppV2
     {
         public int rowIndex { get; set; }
         public string fieldName { get; set; }
+
+        public Grid grid { get; set; }
     }
 }

@@ -10,11 +10,9 @@ namespace GameFinderAppV2.ViewModels
 {
     public class WorkerViewModel
     {
-        private DatabaseModel _db;
-
         public WorkerViewModel()
         {
-            _db = new DatabaseModel();
+          
         }
 
         public List<DBDataViewModel> filter(List<TextBox> generatedTextBoxes, string table)
@@ -22,14 +20,14 @@ namespace GameFinderAppV2.ViewModels
             List<DBDataViewModel> result = new List<DBDataViewModel>();
             if (table.Equals("GameModel"))
             {
-                List<GameModel> gameModels = _db.Games.ToList();
-                List<GameModel> filtered = FilterViewModel.filter<GameModel>(ref generatedTextBoxes, ref gameModels);
-                result = buildReturnList<GameModel>(filtered);
+                result = buildReturnList(GameViewModel.filter(ref generatedTextBoxes));
             } else if (table.Equals("PublisherModel"))
             {
-                List<PublisherModel> publishers = _db.Publishers.ToList();
-                List<PublisherModel> filtered = FilterViewModel.filter<PublisherModel>(ref generatedTextBoxes, ref publishers);
-                result = buildReturnList<PublisherModel>(filtered);
+                result = buildReturnList(PublisherViewModel.filter(ref generatedTextBoxes));
+            }
+            else if (table.Equals("RegionModel"))
+            {
+                result = buildReturnList(RegionViewModel.filter(ref generatedTextBoxes));
             }
 
             return result;

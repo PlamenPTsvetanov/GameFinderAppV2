@@ -18,7 +18,6 @@ namespace GameFinderAppV2.ViewModels
         private ObservableCollection<String> _fieldList = new ObservableCollection<String>();
         public ObservableCollection<String> FieldList { get { return _fieldList; } }
         private Grid gridGeneratedFields { get; set; }
-        private Grid gridOutput { get; set; }
         private int generatedRowIndex = 0;
         private List<TextBox> _genTextBoxes = new List<TextBox>();
         private WorkerViewModel workerViewModel { get; set; }
@@ -26,15 +25,13 @@ namespace GameFinderAppV2.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public UIGeneratorViewModel(
-            ref Grid gridGeneratedFields,
-            ref Grid gridOutput) 
+            ref Grid gridGeneratedFields) 
         {
             this.gridGeneratedFields = gridGeneratedFields;
-            this.gridOutput = gridOutput;
             workerViewModel = new WorkerViewModel();
         }
         
-        public void addNewSearchGridRow(string selectedItem)
+        public void addNewSearchGridRow(string selectedItem, ref Grid generatedFields)
         {
             removeFieldFromList(selectedItem);
             string tboxName = "tbox" + selectedItem;
@@ -85,10 +82,10 @@ namespace GameFinderAppV2.ViewModels
 
             this.generatedRowIndex = generatedRowIndex;
 
-            gridGeneratedFields.RowDefinitions.Add(rowDefinition);
-            gridGeneratedFields.Children.Add(newLabel);
-            gridGeneratedFields.Children.Add(newTextBox);
-            gridGeneratedFields.Children.Add(button);
+            generatedFields.RowDefinitions.Add(rowDefinition);
+            generatedFields.Children.Add(newLabel);
+            generatedFields.Children.Add(newTextBox);
+            generatedFields.Children.Add(button);
 
             _genTextBoxes.Add(newTextBox);
         }
@@ -101,7 +98,7 @@ namespace GameFinderAppV2.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_fieldList)));
         }
 
-        public void generateLabel(object content, ref int idx, int row)
+        public void generateLabel(object content, ref int idx, int row, ref Grid gridOut)
         {
             Label newLabel = new Label();
             newLabel.Content = content;
@@ -114,24 +111,24 @@ namespace GameFinderAppV2.ViewModels
             newLabel.BorderThickness = new Thickness(2);
             Grid.SetRow(newLabel, row);
             Grid.SetColumn(newLabel, idx++);
-            gridOutput.Children.Add(newLabel);
+            gridOut.Children.Add(newLabel);
         }
 
-        public void search(string selectedObject)
+        public void search(string selectedObject, ref Grid gridOut)
         {
-            if (gridOutput.RowDefinitions.Count == 0)
+            if (gridOut.RowDefinitions.Count == 0)
             {
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = new GridLength(30);
 
-                gridOutput.RowDefinitions.Add(rowDefinition);
+                gridOut.RowDefinitions.Add(rowDefinition);
 
 
                 for (int ii = 0; ii < _orderedList.Count; ii++)
                 {
                     ColumnDefinition colDefinition = new ColumnDefinition();
-                    colDefinition.Width = new GridLength(1, GridUnitType.Star);
-                    gridOutput.ColumnDefinitions.Add(colDefinition);
+                    colDefinition.Width =  GridLength.Auto;
+                    gridOut.ColumnDefinitions.Add(colDefinition);
                 }
 
                 int idx = 0;
@@ -147,7 +144,7 @@ namespace GameFinderAppV2.ViewModels
 
                     Grid.SetRow(newLabel, 0);
                     Grid.SetColumn(newLabel, idx++);
-                    gridOutput.Children.Add(newLabel);
+                    gridOut.Children.Add(newLabel);
                 }
             }
             string search =
@@ -161,8 +158,8 @@ namespace GameFinderAppV2.ViewModels
                 RowDefinition rowDef = new RowDefinition();
                 rowDef.Height = new GridLength(30);
 
-                gridOutput.RowDefinitions.Add(rowDef);
-                int row = gridOutput.RowDefinitions.Count - 1;
+                gridOut.RowDefinitions.Add(rowDef);
+                int row = gridOut.RowDefinitions.Count - 1;
 
                 foreach (string cell in model.param.Keys)
                 {
@@ -170,13 +167,13 @@ namespace GameFinderAppV2.ViewModels
                     {
                         if (cell.Equals(field))
                         {
-                            generateLabel(model.param.GetValueOrDefault(cell), ref i, row);
+                            generateLabel(model.param.GetValueOrDefault(cell), ref i, row, ref gridOut);
                             break;
                         }
                     }
                 }
             }
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(gridOutput)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(gridOut)));
         }
 
         public void clearGrid(Grid gridOutput)
@@ -237,7 +234,7 @@ namespace GameFinderAppV2.ViewModels
                         TextBox textBox = gridGeneratedFields.Children[i] as TextBox;
                         removeFromGeneratedTextBoxes(textBox.Name);
                     }
-                    gridGeneratedFields.Children.Remove(tag.grid.Children[i]);   
+                    gridGeneratedFields.Children.Remove(gridGeneratedFields.Children[i]);   
                 }
             }
             gridGeneratedFields.RowDefinitions.RemoveAt(tag.rowIndex);
@@ -247,9 +244,9 @@ namespace GameFinderAppV2.ViewModels
                 int currRow = Grid.GetRow(gridGeneratedFields.Children[i]);
                 if (currRow > tag.rowIndex)
                 {
-                    Grid.SetRow(tag.grid.Children[i], currRow - 1 <= 0 ? 0 : currRow - 1);
+                    Grid.SetRow(gridGeneratedFields.Children[i], currRow - 1 <= 0 ? 0 : currRow - 1);
 
-                    if (tag.grid.Children[i] as Button != null)
+                    if (gridGeneratedFields.Children[i] as Button != null)
                     {
                         Button button = gridGeneratedFields.Children[i] as Button;
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace GameFinderAppV2.ViewModels
@@ -9,7 +10,8 @@ namespace GameFinderAppV2.ViewModels
     public class GameViewModel : FilterViewModel
     {
         private GameModel _game;
-       
+        private static DatabaseModel _db = new DatabaseModel();
+
         public GameViewModel()
         {
             _game = new GameModel();
@@ -29,6 +31,18 @@ namespace GameFinderAppV2.ViewModels
         public String? AgeCategory { get{ return _game.AgeCategory; } }
         public String? Edition { get{ return _game.Edition; } }
 
-     
+        public static List<GameViewModel> filter(ref List<TextBox> generatedTextBoxes)
+        {
+            List<GameModel> gameModels = _db.Games.ToList();
+            List<GameModel> filtered = FilterViewModel.filter<GameModel>(ref generatedTextBoxes, ref gameModels);
+
+            List<GameViewModel> ret = new List<GameViewModel>();
+            foreach (GameModel game in filtered)
+            {
+                ret.Add(new GameViewModel(game));
+            }
+
+            return ret;
+        }
     }
 }
