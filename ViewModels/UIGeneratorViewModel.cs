@@ -237,7 +237,7 @@ namespace GameFinderAppV2.ViewModels
                         TextBox textBox = gridGeneratedFields.Children[i] as TextBox;
                         removeFromGeneratedTextBoxes(textBox.Name);
                     }
-                    gridGeneratedFields.Children.Remove(gridGeneratedFields.Children[i]);   
+                    gridGeneratedFields.Children.Remove(tag.grid.Children[i]);   
                 }
             }
             gridGeneratedFields.RowDefinitions.RemoveAt(tag.rowIndex);
@@ -247,9 +247,9 @@ namespace GameFinderAppV2.ViewModels
                 int currRow = Grid.GetRow(gridGeneratedFields.Children[i]);
                 if (currRow > tag.rowIndex)
                 {
-                    Grid.SetRow(gridGeneratedFields.Children[i], currRow - 1 <= 0 ? 0 : currRow - 1);
+                    Grid.SetRow(tag.grid.Children[i], currRow - 1 <= 0 ? 0 : currRow - 1);
 
-                    if (gridGeneratedFields.Children[i] as Button != null)
+                    if (tag.grid.Children[i] as Button != null)
                     {
                         Button button = gridGeneratedFields.Children[i] as Button;
 
