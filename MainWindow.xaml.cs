@@ -58,18 +58,20 @@ namespace GameFinderAppV2
         private void cbSearchOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedObject = cbSearchOptions.SelectedItem as string;
-            
-            uiGenerator.getFieldsForComboBox(selectedObject);
-           
-            Binding binding = new Binding("FieldList");
-            binding.Source = uiGenerator;
-            cbFields.SetBinding(ListBox.ItemsSourceProperty, binding);
+            if (selectedObject != null)
+            {
+                uiGenerator.getFieldsForComboBox(selectedObject);
 
-            lblSearch.Visibility = Visibility.Hidden;
-            cbSearchOptions.Visibility = Visibility.Hidden;
+                Binding binding = new Binding("FieldList");
+                binding.Source = uiGenerator;
+                cbFields.SetBinding(ListBox.ItemsSourceProperty, binding);
 
-            lblFields.Visibility = Visibility.Visible;
-            cbFields.Visibility = Visibility.Visible;
+                lblSearch.Visibility = Visibility.Hidden;
+                cbSearchOptions.Visibility = Visibility.Hidden;
+
+                lblFields.Visibility = Visibility.Visible;
+                cbFields.Visibility = Visibility.Visible;
+            }
         }
 
         private void btnReturn_Click(object sender, RoutedEventArgs e)
@@ -78,6 +80,7 @@ namespace GameFinderAppV2
 
             lblSearch.Visibility = Visibility.Visible;
             cbSearchOptions.Visibility = Visibility.Visible;
+            cbSearchOptions.SelectedIndex = -1; 
 
             lblFields.Visibility = Visibility.Hidden;
             cbFields.Visibility = Visibility.Hidden;

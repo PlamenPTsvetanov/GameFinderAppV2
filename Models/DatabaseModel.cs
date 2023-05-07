@@ -19,7 +19,7 @@ namespace GameFinderAppV2.Models
         public DbSet<GameModel> Games { get; set; }
         public DbSet<PublisherModel> Publishers { get; set; }
 
-        public List<DBDataModel> getDatabaseData(Dictionary<string, string> inParams, string table)
+       /* public List<DBDataModel> getDatabaseData(Dictionary<string, string> inParams, string table)
         {
             List<DBDataModel> values = new List<DBDataModel>();
             string sqlQuery = "select * from " + table + " where ";
@@ -63,7 +63,7 @@ namespace GameFinderAppV2.Models
             conn.Close();
             return values;
         }
-
+*/
         private bool isString(string parameter)
         {
             return !Regex.Match(parameter, "^[0-9.]+$").Success;

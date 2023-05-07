@@ -27,7 +27,7 @@ namespace GameFinderAppV2.ViewModels
             }
             foreach (object entity in list)
             {
-                bool pass = false;
+                List<bool> passes = new List<bool>();
                 T newEntity = (T)entity;
                 foreach (TextBox textBox in generatedTextBoxes)
                 {
@@ -36,12 +36,12 @@ namespace GameFinderAppV2.ViewModels
                     foreach (PropertyInfo fieldInfo in fieldInfos)
                     {
                         if (fieldInfo.Name.Equals(simpleTName))
-                           pass = contains<T>(fieldInfo, newEntity, textBox);
+                          passes.Add(contains<T>(fieldInfo, newEntity, textBox));
  
                     }
 
                 }
-                if (pass)
+                if (passes.All(p => p) && passes.Count != 0)
                 {
                     returnList.Add(newEntity);
                 }

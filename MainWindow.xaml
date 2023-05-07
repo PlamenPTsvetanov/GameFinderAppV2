@@ -8,7 +8,7 @@
         
         Title="GameFinderApp" Height="500" Width="800"
         MinHeight="300"
-        MinWidth="400">
+        MinWidth="420">
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400"/>

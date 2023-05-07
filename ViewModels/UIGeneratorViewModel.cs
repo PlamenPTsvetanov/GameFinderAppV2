@@ -153,9 +153,9 @@ namespace GameFinderAppV2.ViewModels
             string search =
                 selectedObject.Substring(0, selectedObject.Length - 1) + "Model";
 
-            List<DBDataModel> filtered = workerViewModel.filter(_genTextBoxes, search);
+            List<DBDataViewModel> filtered = workerViewModel.filter(_genTextBoxes, search);
 
-            foreach (DBDataModel model in filtered)
+            foreach (DBDataViewModel model in filtered)
             {
                 int i = 0;
                 RowDefinition rowDef = new RowDefinition();
@@ -181,6 +181,7 @@ namespace GameFinderAppV2.ViewModels
 
         public void clearGrid(Grid gridOutput)
         {
+            generatedRowIndex = 0;
             gridOutput.Children.Clear();
             gridOutput.RowDefinitions.Clear();
             gridOutput.ColumnDefinitions.Clear();
