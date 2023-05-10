@@ -6,39 +6,40 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
 
-namespace GameFinderAppV2.ViewModels
+namespace GameFinderAppV2.Utils
 {
-    public class WorkerViewModel
+    public class WorkerUtil
     {
-        public WorkerViewModel()
+        public WorkerUtil()
         {
-          
+
         }
 
-        public List<DBDataViewModel> filter(List<TextBox> generatedTextBoxes, string table)
+        public List<DBDataUtil> filter(List<TextBox> generatedTextBoxes, string table)
         {
-            List<DBDataViewModel> result = new List<DBDataViewModel>();
+            List<DBDataUtil> result = new List<DBDataUtil>();
             if (table.Equals("GameModel"))
             {
-                result = buildReturnList(GameViewModel.filter(ref generatedTextBoxes));
-            } else if (table.Equals("PublisherModel"))
+                result = buildReturnList(GameUtil.filter(ref generatedTextBoxes));
+            }
+            else if (table.Equals("PublisherModel"))
             {
-                result = buildReturnList(PublisherViewModel.filter(ref generatedTextBoxes));
+                result = buildReturnList(PublisherUtil.filter(ref generatedTextBoxes));
             }
             else if (table.Equals("RegionModel"))
             {
-                result = buildReturnList(RegionViewModel.filter(ref generatedTextBoxes));
+                result = buildReturnList(RegionUtil.filter(ref generatedTextBoxes));
             }
 
             return result;
         }
 
-        public ObservableCollection<String> getFields(Type type)
+        public ObservableCollection<string> getFields(Type type)
         {
-            ObservableCollection<String> fields = new ObservableCollection<String>();
+            ObservableCollection<string> fields = new ObservableCollection<string>();
             PropertyInfo[] propertyInfos = WorkerModel.getFields(type);
 
-            foreach (PropertyInfo info in propertyInfos) 
+            foreach (PropertyInfo info in propertyInfos)
             {
                 if (!info.Name.Equals("Id"))
                 {
@@ -48,13 +49,13 @@ namespace GameFinderAppV2.ViewModels
 
             return fields;
         }
-    
-        public List<DBDataViewModel> buildReturnList<T>(List<T> items)
+
+        public List<DBDataUtil> buildReturnList<T>(List<T> items)
         {
-            List<DBDataViewModel> ret = new List<DBDataViewModel>();
+            List<DBDataUtil> ret = new List<DBDataUtil>();
             foreach (object item in items)
             {
-                DBDataViewModel viewModel = new DBDataViewModel();
+                DBDataUtil viewModel = new DBDataUtil();
 
                 T newEntity = (T)item;
                 PropertyInfo[] fields = WorkerModel.getFields(newEntity.GetType());

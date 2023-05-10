@@ -1,14 +1,15 @@
 ﻿using GameFinderAppV2.Models;
 using System.Collections.Generic;
 
-namespace GameFinderAppV2.ViewModels
+namespace GameFinderAppV2.Utils
 {
 
-    public class DBDataViewModel
+    public class DBDataUtil
     {
         private DBDataModel _DBModel { get; set; }
 
-        public DBDataViewModel() { 
+        public DBDataUtil()
+        {
             _DBModel = new DBDataModel();
         }
 

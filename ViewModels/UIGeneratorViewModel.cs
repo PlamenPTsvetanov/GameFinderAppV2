@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Windows.Media;
 using GameFinderAppV2.Models;
 using Label = System.Windows.Controls.Label;
+using GameFinderAppV2.Utils;
 
 namespace GameFinderAppV2.ViewModels
 {
@@ -20,7 +21,7 @@ namespace GameFinderAppV2.ViewModels
         private Grid gridGeneratedFields { get; set; }
         private int generatedRowIndex = 0;
         private List<TextBox> _genTextBoxes = new List<TextBox>();
-        private WorkerViewModel workerViewModel { get; set; }
+        private WorkerUtil workerViewModel { get; set; }
         
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -28,7 +29,7 @@ namespace GameFinderAppV2.ViewModels
             ref Grid gridGeneratedFields) 
         {
             this.gridGeneratedFields = gridGeneratedFields;
-            workerViewModel = new WorkerViewModel();
+            workerViewModel = new WorkerUtil();
         }
         
         public void addNewSearchGridRow(string selectedItem, ref Grid generatedFields)
@@ -98,7 +99,7 @@ namespace GameFinderAppV2.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_fieldList)));
         }
 
-        public void generateLabel(object content, ref int idx, int row, ref Grid gridOut)
+        private void generateLabel(object content, ref int idx, int row, ref Grid gridOut)
         {
             Label newLabel = new Label();
             newLabel.Content = content;
@@ -150,9 +151,9 @@ namespace GameFinderAppV2.ViewModels
             string search =
                 selectedObject.Substring(0, selectedObject.Length - 1) + "Model";
 
-            List<DBDataViewModel> filtered = workerViewModel.filter(_genTextBoxes, search);
+            List<DBDataUtil> filtered = workerViewModel.filter(_genTextBoxes, search);
 
-            foreach (DBDataViewModel model in filtered)
+            foreach (DBDataUtil model in filtered)
             {
                 int i = 0;
                 RowDefinition rowDef = new RowDefinition();

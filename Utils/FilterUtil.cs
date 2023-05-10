@@ -11,9 +11,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
-namespace GameFinderAppV2.ViewModels
+namespace GameFinderAppV2.Utils
 {
-    public class FilterViewModel
+    public class FilterUtil
     {
         public static List<T> filter<T>(ref List<TextBox> generatedTextBoxes, ref List<T> list)
         {
@@ -36,8 +36,8 @@ namespace GameFinderAppV2.ViewModels
                     foreach (PropertyInfo fieldInfo in fieldInfos)
                     {
                         if (fieldInfo.Name.Equals(simpleTName))
-                          passes.Add(contains<T>(fieldInfo, newEntity, textBox));
- 
+                            passes.Add(contains(fieldInfo, newEntity, textBox));
+
                     }
 
                 }
@@ -61,7 +61,7 @@ namespace GameFinderAppV2.ViewModels
 
             foreach (string inp in input)
             {
-                if (fieldInfo.GetValue(newEntity) != null && fieldInfo.GetValue(newEntity).ToString().Contains(inp) && !inp.Equals(String.Empty))
+                if (fieldInfo.GetValue(newEntity) != null && fieldInfo.GetValue(newEntity).ToString().Contains(inp) && !inp.Equals(string.Empty))
                 {
                     return true;
                 }
@@ -97,7 +97,7 @@ namespace GameFinderAppV2.ViewModels
             Regex regex = new Regex(pattern);
             if (!regex.IsMatch(tb.Text))
             {
-                MessageBox.Show(String.Format("Entered value {0} is invalid for field {1}", tb.Text, tb.Name.Substring(4)), "Error");
+                MessageBox.Show(string.Format("Entered value {0} is invalid for field {1}", tb.Text, tb.Name.Substring(4)), "Error");
                 return false;
             }
             return true;
